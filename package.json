@@ -2,7 +2,7 @@
   "name": "vscode-xenoscript",
   "displayName": "XenoScript",
   "description": "Language support for XenoScript — the modding scripting language",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "DoItBetterStudio",
   "engines": {
     "vscode": "^1.82.0"
