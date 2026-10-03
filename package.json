@@ -1,0 +1,127 @@
+{
+  "name": "vscode-xenoscript",
+  "displayName": "XenoScript",
+  "description": "Language support for XenoScript — the modding scripting language",
+  "version": "1.0.2",
+  "publisher": "DoItBetterStudio",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "xenoscript",
+    "xeno",
+    "modding",
+    "scripting"
+  ],
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DoItBetter-Studio/vscode-xenoscript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DoItBetter-Studio/vscode-xenoscript/issues"
+  },
+  "homepage": "https://github.com/DoItBetter-Studio/vscode-xenoscript#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run bundle",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+	"bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=out/extension.js --minify",
+	"typecheck": "tsc --noEmit"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "xenoscript",
+        "aliases": [
+          "XenoScript",
+          "xeno"
+        ],
+        "extensions": [
+          ".xeno"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "xenoscript",
+        "scopeName": "source.xeno",
+        "path": "./syntaxes/xenoscript.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "xenoscript.restartServer",
+        "title": "XenoScript: Restart Language Server"
+      },
+      {
+        "command": "xenoscript.showLspPath",
+        "title": "XenoScript: Show Language Server Path"
+      },
+      {
+        "command": "xenoscript.buildProject",
+        "title": "XenoScript: Build Project",
+        "icon": "$(package)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "xenoscript.buildProject",
+          "when": "resourceLangId == xenoscript",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "XenoScript",
+      "properties": {
+        "xenoscript.lspPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the xenolsp binary. Prefer your game's or SDK's copy so the embedded stdlib matches that title. Leave empty to auto-detect from the workspace, XENOLSP, a bundled bin/, or PATH."
+        },
+        "xenoscript.lspPathWindows": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Windows-only override for xenoscript.lspPath."
+        },
+        "xenoscript.lspPathLinux": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Linux-only override for xenoscript.lspPath."
+        },
+        "xenoscript.toolchainRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Root of a XenoScript toolchain or game install. The extension looks for tools/xenolsp or bin/xenolsp under this path when lspPath is empty."
+        },
+        "xenoscript.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Trace communication between VS Code and xenolsp."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.82.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.0.0"
+  }
+}

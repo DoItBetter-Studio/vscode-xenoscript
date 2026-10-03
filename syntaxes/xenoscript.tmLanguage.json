@@ -1,0 +1,274 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "XenoScript",
+  "scopeName": "source.xeno",
+  "fileTypes": ["xeno"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#interpolated-string" },
+    { "include": "#attributes" },
+    { "include": "#imports" },
+    { "include": "#keywords-control" },
+    { "include": "#keywords-declaration" },
+    { "include": "#keywords-modifier" },
+    { "include": "#keywords-operator" },
+    { "include": "#constants" },
+    { "include": "#types-builtin" },
+    { "include": "#numbers" },
+    { "include": "#function-call" },
+    { "include": "#type-annotation" },
+    { "include": "#identifiers" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.xeno",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.xeno",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "beginCaptures": { "0": { "name": "punctuation.definition.comment.begin.xeno" } },
+          "endCaptures":   { "0": { "name": "punctuation.definition.comment.end.xeno" } }
+        }
+      ]
+    },
+
+    "strings": {
+      "name": "string.quoted.double.xeno",
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.xeno" } },
+      "endCaptures":   { "0": { "name": "punctuation.definition.string.end.xeno" } },
+      "patterns": [
+        {
+          "name": "constant.character.escape.xeno",
+          "match": "\\\\[nrt\\\\\"'0]"
+        }
+      ]
+    },
+
+    "interpolated-string": {
+      "name": "string.quoted.double.xeno",
+      "begin": "\\$\"",
+      "end": "\"",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.xeno" } },
+      "endCaptures":   { "0": { "name": "punctuation.definition.string.end.xeno" } },
+      "patterns": [
+        {
+          "name": "meta.interpolation.xeno",
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": { "0": { "name": "punctuation.section.interpolation.begin.xeno" } },
+          "endCaptures":   { "0": { "name": "punctuation.section.interpolation.end.xeno" } },
+          "patterns": [{ "include": "$self" }]
+        },
+        {
+          "name": "constant.character.escape.xeno",
+          "match": "\\\\[nrt\\\\\"'0]"
+        }
+      ]
+    },
+
+    "attributes": {
+      "name": "meta.attribute.xeno",
+      "begin": "@(?=[A-Z])",
+      "end": "(?=\\s|$|[^A-Za-z0-9_(<])",
+      "beginCaptures": { "0": { "name": "punctuation.definition.attribute.xeno" } },
+      "patterns": [
+        {
+          "name": "entity.name.tag.xeno",
+          "match": "[A-Z][A-Za-z0-9_]*"
+        }
+      ]
+    },
+
+    "imports": {
+      "patterns": [
+        {
+          "name": "meta.import.system.xeno",
+          "match": "\\b(import)\\s+(<[A-Za-z0-9_.]+>)",
+          "captures": {
+            "1": { "name": "keyword.control.import.xeno" },
+            "2": { "name": "string.other.module.xeno" }
+          }
+        },
+        {
+          "name": "meta.import.local.xeno",
+          "match": "\\b(import)\\s+(\"[^\"]*\")",
+          "captures": {
+            "1": { "name": "keyword.control.import.xeno" },
+            "2": { "name": "string.quoted.double.xeno" }
+          }
+        }
+      ]
+    },
+
+    "keywords-control": {
+      "name": "keyword.control.xeno",
+      "match": "\\b(if|else|while|for|foreach|in|return|break|continue|match|case|default|try|catch|finally|throw)\\b"
+    },
+
+    "keywords-declaration": {
+      "name": "keyword.declaration.xeno",
+      "match": "\\b(class|interface|enum|function|event|delegate)\\b"
+    },
+
+    "keywords-modifier": {
+      "name": "storage.modifier.xeno",
+      "match": "\\b(public|private|protected|static|final|virtual|override|abstract)\\b"
+    },
+
+    "keywords-operator": {
+      "patterns": [
+        {
+          "name": "keyword.operator.new.xeno",
+          "match": "\\bnew\\b"
+        },
+        {
+          "name": "keyword.operator.typeof.xeno",
+          "match": "\\btypeof\\b"
+        },
+        {
+          "name": "keyword.operator.cast.xeno",
+          "match": "\\b(as|is)\\b"
+        },
+        {
+          "name": "keyword.other.xeno",
+          "match": "\\b(this|super|where)\\b"
+        }
+      ]
+    },
+
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.xeno",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.language.null.xeno",
+          "match": "\\bnull\\b"
+        }
+      ]
+    },
+
+    "types-builtin": {
+      "name": "support.type.builtin.xeno",
+      "match": "\\b(int|float|double|bool|string|void|byte|char|short|long|sbyte|uint|ushort|ulong)\\b"
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.xeno",
+          "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?[fF]?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.xeno",
+          "match": "\\b(0x[0-9A-Fa-f]+|[0-9]+)\\b"
+        }
+      ]
+    },
+
+    "function-call": {
+      "name": "meta.function-call.xeno",
+      "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function.xeno" }
+      }
+    },
+
+    "type-annotation": {
+      "patterns": [
+        {
+          "comment": "Generic type like List<int> or Dict<string, int>",
+          "name": "meta.generic-type.xeno",
+          "match": "\\b([A-Z][A-Za-z0-9_]*)\\s*(<[^>]+>)",
+          "captures": {
+            "1": { "name": "entity.name.type.xeno" },
+            "2": { "name": "entity.name.type.generic.xeno" }
+          }
+        },
+        {
+          "comment": "Nullable type like Greeter?",
+          "match": "\\b([A-Z][A-Za-z0-9_]*)\\?",
+          "captures": {
+            "1": { "name": "entity.name.type.xeno" }
+          }
+        },
+        {
+          "comment": "Plain class/interface name (PascalCase)",
+          "name": "entity.name.type.xeno",
+          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+
+    "identifiers": {
+      "name": "variable.other.xeno",
+      "match": "\\b[a-z_][A-Za-z0-9_]*\\b"
+    },
+
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.terminator.statement.xeno",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.accessor.xeno",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.definition.block.begin.xeno",
+          "match": "\\{"
+        },
+        {
+          "name": "punctuation.definition.block.end.xeno",
+          "match": "\\}"
+        },
+        {
+          "name": "punctuation.definition.parameters.begin.xeno",
+          "match": "\\("
+        },
+        {
+          "name": "punctuation.definition.parameters.end.xeno",
+          "match": "\\)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.xeno",
+          "match": "[+\\-*/%]"
+        },
+        {
+          "name": "keyword.operator.comparison.xeno",
+          "match": "(==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.xeno",
+          "match": "(&&|\\|\\||!)"
+        },
+        {
+          "name": "keyword.operator.assignment.xeno",
+          "match": "(\\+=|-=|\\*=|/=|=)"
+        },
+        {
+          "name": "keyword.operator.nullable.xeno",
+          "match": "(\\?\\?|\\?\\.)"
+        },
+        {
+          "name": "punctuation.separator.comma.xeno",
+          "match": ","
+        },
+        {
+          "name": "punctuation.separator.colon.xeno",
+          "match": ":"
+        }
+      ]
+    }
+  }
+}
